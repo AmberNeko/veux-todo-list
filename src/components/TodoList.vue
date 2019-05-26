@@ -7,7 +7,7 @@
       <div class="list" v-for="data in todos" :key="data.id">
         <p>{{data.todo}}</p>
         <div class="inline-block verticle-bottom">
-          <span class="icon" @click="editer(data.id,data.todo)">
+          <span class="icon" @click="edit(data.id)">
             <img src="../assets/edit-regular.svg" alt="edit">
           </span>
           <span class="icon" v-if="!data.complete" @click="complete(data.id)">
@@ -20,18 +20,8 @@
             <img src="../assets/times-circle-regular.svg" alt="delete">
           </span>
         </div>
-      </div>
-    </section>
-    <section v-if="edit" class="editer">
-      <div class="bg-green">
-        <textarea v-model="editText" class="editer-textarea" cols="30" rows="10" autofocus></textarea>
-        <div class="editer-check">
-          <span class="icon" @click="cancel">
-            <img src="../assets/times-circle-regular.svg" alt="delete">
-          </span>
-          <span class="icon" @click="confirm">
-            <img src="../assets/check-circle-regular.svg" alt="check">
-          </span>
+        <div v-if="data.edit">
+          <textarea class="editer" v-model="data.todo" cols="30" rows="10" autofocus></textarea>
         </div>
       </div>
     </section>
@@ -40,18 +30,9 @@
 <script>
 export default {
   name: "TodoList",
-  data() {
-    return {
-      edit: false,
-      editText: "",
-      editId: 0
-    };
-  },
   methods: {
-    editer: function(id, text) {
-      this.edit = true;
-      this.editId = id;
-      this.editText = text;
+    edit: function(id) {
+      this.$store.commit("edit", id);
     },
     complete: function(id) {
       this.$store.commit("complete", id);
@@ -65,11 +46,6 @@ export default {
     cancel: function() {
       this.edit = false;
       this.editText = "";
-    },
-    confirm: function() {
-      this.$store.commit("confirm", { id: this.editId, text: this.editText });
-      this.editText = "";
-      this.edit = false;
     }
   },
   computed: {
@@ -119,50 +95,14 @@ export default {
   width: 100%;
 }
 .editer {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(219, 219, 219, 0.5);
-  z-index: 99999;
-}
-.editer > div {
-  width: 60%;
-  height: 500px;
-}
-.editer-textarea {
-  width: 60%;
+  width: 80%;
+  margin: 5px 0 0;
   font-size: 2rem;
   resize: none;
-  margin: 20px 0 0;
-}
-.editer-check {
-  display: flex;
-  justify-content: space-around;
-  margin: 50px auto 0;
-  width: 60%;
-}
-.editer .icon {
-  width: 60px;
-  height: 60px;
 }
 @media screen and (max-width: 820px) {
   .editer {
-    position: fixed;
-  }
-  .editer > div {
-    width: 350px;
-    height: 350px;
-  }
-  .editer-textarea {
-    height: 230px;
-  }
-  .editer-check {
-    margin: 10px auto 0;
+    width: 100%;
   }
   .list-area {
     width: 90%;

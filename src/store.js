@@ -29,9 +29,9 @@ export default new Vuex.Store({
         complete: false
       })
     },
-    confirm(state, payload) {
+    edit(state, id) {
       state.todos.map(data => {
-        if (data.id === payload.id) data.todo = payload.text
+        if (data.id === id) data.edit = !data.edit
       })
     },
     complete(state, id) {
